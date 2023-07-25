@@ -23,7 +23,7 @@ jobs:
         # Don't use warning_level or werror. They are applied also to subprojects.
         # Don't build documentation. It requires doxygen and dot.
         # run: meson setup -Dwarnings=fatal -Dmaintainer-mode=false _build
-        run: meson setup -Dwarnings=fatal -Dbuild-documentation=false _build
+        run: meson setup -Dwarnings=fatal -Dbuild-documentation=false -Dmm-common:use-network=true _build
 
       - name: Compile dynamic
         run: meson compile -C _build
@@ -33,7 +33,7 @@ jobs:
 
       - name: Configure static
         # run: meson setup -Dwarnings=fatal --default-library static -Dmaintainer-mode=false _build_static
-        run: meson setup -Dwarnings=fatal --default-library static _build_static
+        run: meson setup -Dwarnings=fatal -Dmm-common:use-network=true --default-library static _build_static
 
       - name: Compile static
         run: meson compile -C _build_static
