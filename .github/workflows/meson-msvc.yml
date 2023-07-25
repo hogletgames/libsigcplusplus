@@ -1,0 +1,42 @@
+name: "meson msvc"
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - run: pip install meson ninja
+
+      - name: Prepare MSVC
+        uses: bus1/cabuild/action/msdevshell@v1
+        with:
+          architecture: x64
+
+      - name: Configure
+        # Don't use warning_level or werror. They are applied also to subprojects.
+        # Don't build documentation. It requires doxygen and dot.
+        # run: meson setup --Dwarnings=fatal -Dmaintainer-mode=false _build
+        run: meson setup --Dwarnings=fatal _build
+
+      - name: Compile dynamic
+        run: meson compile -C _build
+
+      - name: Test dynamic
+        run: meson test -C _build
+
+      - name: Configure static
+        # run: meson setup --Dwarnings=fatal --default-library static -Dmaintainer-mode=false _build_static
+        run: meson setup --Dwarnings=fatal --default-library static -Dbuild-documentation=false _build_static
+
+      - name: Compile static
+        run: meson compile -C _build_static
+
+      - name: Test static
+        run: meson test -C _build_static

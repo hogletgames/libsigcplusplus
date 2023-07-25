@@ -1,6 +1,7 @@
-name: "CI: cmake: msvc 2019"
+name: "cmake msvc 2019"
 
-on: [push]
+# Trigger manually
+on: [workflow_dispatch]
 
 jobs:
   build:
